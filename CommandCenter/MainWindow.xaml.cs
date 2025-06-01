@@ -72,8 +72,7 @@ public partial class MainWindow
 
     private void ToggleIisService(string id)
     {
-        var parameters = new Dictionary<string, object> { { "name", id } };
-        PowershellExecutor.RunScriptFile("test", parameters);
+        IisManager.ToggleService(id);
         UpdateServices();
     }
 

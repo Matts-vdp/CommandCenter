@@ -4,23 +4,23 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="My Overlay" Height="200" Width="200"
+        Title="Command Center" Width="150" Height="80"
         WindowStyle="None"
         ResizeMode="NoResize"
         AllowsTransparency="True"
         Background="Transparent"
         Topmost="True"
         ShowInTaskbar="False">
-    <StackPanel HorizontalAlignment="Left" Width="auto">
-        <Border Height="20" Width="auto" Background="Black" Opacity="0.3" Margin="0 5" />
-        
-        <StackPanel Orientation="Horizontal" Width="auto" Margin="0 5">
-            <Button Width="25" x:Name="Foundation" Click="Service_OnClick">1</Button>
-            <Label Foreground="White">Foundation</Label>
+    <Border CornerRadius="10" Background="Black" Opacity="0.3" Width="150" Height="80">
+        <StackPanel HorizontalAlignment="Left" Margin="10 7">
+            <StackPanel Orientation="Horizontal" Width="auto">
+                <Button Width="20" Height="20" x:Name="Foundation" Click="Service_OnClick">1</Button>
+                <Label Foreground="White">Foundation</Label>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Width="auto">
+                <Button Width="20" Height="20" x:Name="Fusion" Click="Service_OnClick">2</Button>
+                <Label Foreground="White">Fusion</Label>
+            </StackPanel>
         </StackPanel>
-        <StackPanel Orientation="Horizontal" Width="auto" Margin="0 5">
-            <Button Width="25" x:Name="Fusion" Click="Service_OnClick">2</Button>
-            <Label Foreground="White">Fusion</Label>
-        </StackPanel>
-    </StackPanel>
+    </Border>
 </Window>

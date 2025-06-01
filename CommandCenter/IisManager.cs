@@ -10,4 +10,10 @@ public static class IisManager
             { "myprotime", false }
         };
     }
+
+    public static void ToggleService(string id)
+    {
+        var parameters = new Dictionary<string, object> { { "name", id } };
+        PowershellExecutor.RunScriptFile("test", parameters);
+    }
 }
