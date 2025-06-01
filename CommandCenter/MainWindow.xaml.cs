@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System.ComponentModel;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -8,9 +10,10 @@ using CommandCenter.Models;
 
 namespace CommandCenter;
 
-public partial class MainWindow
+public partial class MainWindow : INotifyPropertyChanged
 {
     private GlobalHotkeyService? _hotkeyService;
+    public double OpacityValue { get; set; } = 1;
 
     private readonly Dictionary<string, Service> _services = new()
     {
@@ -22,6 +25,7 @@ public partial class MainWindow
     {
         InitializeComponent();
         MouseDown += MainWindow_MouseDown;
+        DataContext = this;
     }
 
     protected override void OnSourceInitialized(EventArgs e)
@@ -36,7 +40,6 @@ public partial class MainWindow
 
         // register global hotkeys
         List<Hotkey> hotkeys = [
-            new MessageKey(),
             new ToggleVisibilityKey(ToggleVisibility),
             new ClickThroughKey(windowHandle),
         ];
@@ -66,19 +69,45 @@ public partial class MainWindow
             button!.Background = GetColor(status[value.Id]);
         }
     }
-    
-    private SolidColorBrush GetColor(bool status) => status ? Brushes.Chartreuse : Brushes.Salmon;
-    private void Service_OnClick(object sender, RoutedEventArgs e) => ToggleIisService(((Button) sender).Name);
 
-    private void ToggleIisService(string id)
+    private SolidColorBrush GetColor(bool status) => status ? Brushes.Chartreuse : Brushes.Salmon;
+
+    private async void Service_OnClick(object sender, RoutedEventArgs e) => await ToggleIisService(((Button) sender).Name);
+
+    private async void FetchToken_OnClick(object sender, RoutedEventArgs e)
     {
-        IisManager.ToggleService(id);
+        FetchToken.Background = Brushes.Coral;
+        await PowershellExecutor.RunScriptFile("fetch-token");
+        FetchToken.Background = Brushes.GreenYellow;
+        await Task.Delay(5000);
+        FetchToken.Background = Brushes.White;
+    }
+
+    private async Task ToggleIisService(string id)
+    {
+        await IisManager.ToggleService(id);
         UpdateServices();
     }
 
-    private void ToggleVisibility() => Visibility = Visibility == Visibility.Visible 
-        ? Visibility.Collapsed 
-        : Visibility.Visible;
+    private void ToggleVisibility()
+    {
+        if (Visibility == Visibility.Visible)
+        {
+            if (OpacityValue < 0.7)
+            {
+                Visibility = Visibility.Collapsed;
+                return;
+            }
+
+            OpacityValue = 0.3;
+            OnPropertyChanged(nameof(OpacityValue));
+            return;
+        }
+
+        OpacityValue = 1;
+        OnPropertyChanged(nameof(OpacityValue));
+        Visibility = Visibility.Visible;
+    }
 
     private void MainWindow_MouseDown(object sender, MouseButtonEventArgs e)
     {
@@ -90,5 +119,12 @@ public partial class MainWindow
     {
         _hotkeyService?.Dispose();
         base.OnClosed(e);
+    }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

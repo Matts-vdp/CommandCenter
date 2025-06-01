@@ -11,9 +11,9 @@ public static class IisManager
         };
     }
 
-    public static void ToggleService(string id)
+    public static async Task ToggleService(string id)
     {
         var parameters = new Dictionary<string, object> { { "name", id } };
-        PowershellExecutor.RunScriptFile("test", parameters);
+        await PowershellExecutor.RunScriptFile("test", parameters);
     }
 }

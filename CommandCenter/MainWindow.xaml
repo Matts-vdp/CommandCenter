@@ -4,23 +4,78 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Command Center" Width="150" Height="80"
+        Title="Command Center" Width="160" Height="200"
         WindowStyle="None"
         ResizeMode="NoResize"
         AllowsTransparency="True"
         Background="Transparent"
         Topmost="True"
         ShowInTaskbar="False">
-    <Border CornerRadius="10" Background="Black" Opacity="0.3" Width="150" Height="80">
-        <StackPanel HorizontalAlignment="Left" Margin="10 7">
-            <StackPanel Orientation="Horizontal" Width="auto">
-                <Button Width="20" Height="20" x:Name="Foundation" Click="Service_OnClick">1</Button>
-                <Label Foreground="White">Foundation</Label>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Width="auto">
-                <Button Width="20" Height="20" x:Name="Fusion" Click="Service_OnClick">2</Button>
-                <Label Foreground="White">Fusion</Label>
-            </StackPanel>
-        </StackPanel>
+    <Border CornerRadius="10" Background="Black" Opacity="{Binding OpacityValue}" Width="160" Height="200">
+        <TabControl Background="Transparent" BorderThickness="0">
+            <TabControl.Resources>
+                <Style TargetType="TabItem">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="TabItem">
+                                <Grid>
+                                    <Border x:Name="Bd"
+                                            Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="1,1,1,0"
+                                            CornerRadius="10,10,0,0">
+                                        <ContentPresenter x:Name="Content" ContentSource="Header" Margin="{TemplateBinding Padding}"/>
+                                    </Border>
+                                </Grid>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsSelected" Value="False">
+                                        <Setter TargetName="Bd" Property="Opacity" Value="0.3"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </TabControl.Resources>
+            <TabItem Header="Services" Background="Transparent" Foreground="White">
+                <StackPanel HorizontalAlignment="Left" Margin="10 7">
+                    <StackPanel Orientation="Horizontal" Width="auto">
+                        <Button Width="20" Height="20" x:Name="Foundation" Click="Service_OnClick">1</Button>
+                        <Label Foreground="White">Foundation</Label>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Width="auto">
+                        <Button Width="20" Height="20" x:Name="Fusion" Click="Service_OnClick">2</Button>
+                        <Label Foreground="White">Fusion</Label>
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+
+            <TabItem Header="Tools" Background="Transparent" Foreground="White">
+                <StackPanel HorizontalAlignment="Left" Margin="10 7">
+                    <StackPanel Orientation="Horizontal" Width="auto">
+                        <Button Width="20" Height="20" x:Name="FetchToken" Click="FetchToken_OnClick" />
+                        <Label Foreground="White">Fetch token</Label>
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+            
+            <TabItem Header="Help" Background="Transparent" Foreground="White">
+                <Grid Margin="5 7">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <Label Grid.Row="0" Grid.Column="0" Foreground="White">ctrl+alt+V:</Label>
+                    <Label Grid.Row="0" Grid.Column="1" Foreground="White">visibility</Label>
+                    <Label Grid.Row="1" Grid.Column="0" Foreground="White">ctrl+alt+C:</Label>
+                    <Label Grid.Row="1" Grid.Column="1" Foreground="White">click through</Label>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Border>
 </Window>
