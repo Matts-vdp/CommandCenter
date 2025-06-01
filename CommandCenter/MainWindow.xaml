@@ -3,22 +3,23 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CommandCenter"
         mc:Ignorable="d"
-        Title="My Overlay" Height="300" Width="400"
+        Title="My Overlay" Height="200" Width="200"
         WindowStyle="None"
         ResizeMode="NoResize"
         AllowsTransparency="True"
         Background="Transparent"
         Topmost="True"
         ShowInTaskbar="False">
-    <Grid>
-        <Border BorderBrush="LightBlue" BorderThickness="2" CornerRadius="10" Background="#80000000">
-            <TextBlock Text="My Overlay Window!"
-                       Foreground="White"
-                       FontSize="20"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"/>
-        </Border>
-    </Grid>
+    <StackPanel HorizontalAlignment="Left" Width="auto">
+    <Border Height="20" Width="auto" Background="Black" Opacity="0.3" Margin="0 5" />
+    <StackPanel Orientation="Horizontal" Width="auto" Margin="0 5">
+        <Button Width="25" x:Name="Test" Click="Test_OnClick" />
+        <Label Foreground="White">ServiceName</Label>
+    </StackPanel>
+    <StackPanel Orientation="Horizontal" Width="auto" Margin="0 5">
+        <Button Width="25" x:Name="Test2" Click="Test2_OnClick"/>
+        <Label Foreground="White">ServiceName2</Label>
+    </StackPanel>
+    </StackPanel>
 </Window>

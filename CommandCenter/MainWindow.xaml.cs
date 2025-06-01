@@ -1,16 +1,14 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
 using CommandCenter.Models;
 
 namespace CommandCenter;
 
-/// <summary>
-/// Interaction logic for MainWindow.xaml
-/// </summary>
-public partial class MainWindow : Window
+public partial class MainWindow
 {
-    private GlobalHotkeyService _hotkeyService;
+    private GlobalHotkeyService? _hotkeyService;
 
     public MainWindow()
     {
@@ -52,7 +50,19 @@ public partial class MainWindow : Window
 
     protected override void OnClosed(EventArgs e)
     {
-        _hotkeyService.Dispose();
+        _hotkeyService?.Dispose();
         base.OnClosed(e);
+    }
+
+    private void Test_OnClick(object sender, RoutedEventArgs e)
+    {
+        var result = PowershellExecutor.RunScriptFile<bool>("test", new Dictionary<string, object> { { "enable", true } });
+        Test.Background = result ? Brushes.Chartreuse : Brushes.Brown;
+    }
+
+    private void Test2_OnClick(object sender, RoutedEventArgs e)
+    {
+        var result = PowershellExecutor.RunScriptFile<bool>("test", new Dictionary<string, object> { { "enable", false } });
+        Test2.Background = result ? Brushes.Chartreuse : Brushes.Brown;
     }
 }
