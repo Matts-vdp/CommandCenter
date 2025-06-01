@@ -11,7 +11,8 @@ namespace CommandCenter;
 public partial class MainWindow
 {
     private GlobalHotkeyService? _hotkeyService;
-    private Dictionary<string, Service> _services = new()
+
+    private readonly Dictionary<string, Service> _services = new()
     {
         {"Foundation", new Service{ Id = "Foundation" }},
         {"Fusion", new Service{ Id = "myprotime" }}
@@ -58,13 +59,11 @@ public partial class MainWindow
     {
         // Get service status and set correctly
         var status = IisManager.GetStatus();
-        foreach (var (key, value) in _services)
-            value.Status = status[value.Id];
         
         foreach (var (key, value) in _services)
         {
             var button = (Button?) GetType().GetField(key, BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(this);
-            button!.Background = GetColor(value.Status);
+            button!.Background = GetColor(status[value.Id]);
         }
     }
     

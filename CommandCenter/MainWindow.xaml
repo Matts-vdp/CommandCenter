@@ -13,7 +13,7 @@
         ShowInTaskbar="False">
     <StackPanel HorizontalAlignment="Left" Width="auto">
         <Border Height="20" Width="auto" Background="Black" Opacity="0.3" Margin="0 5" />
-
+        
         <StackPanel Orientation="Horizontal" Width="auto" Margin="0 5">
             <Button Width="25" x:Name="Foundation" Click="Service_OnClick">1</Button>
             <Label Foreground="White">Foundation</Label>
