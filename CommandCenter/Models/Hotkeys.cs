@@ -35,3 +35,22 @@ public class ClickThroughKey(IntPtr windowHandle) : Hotkey
         MessageBox.Show($"Overlay click-through is now: {(_windowStyleService.IsClickThrough ? "ON" : "OFF")}");
     }
 }
+
+public class ActionHotKey : Hotkey
+{
+    private readonly Action _action;
+    public override uint Modifier => Modifiers.MOD_CONTROL | Modifiers.MOD_ALT;
+
+    public override Key Key { get; }
+
+    public ActionHotKey(Key key, Action action)
+    {
+        _action = action;
+        Key = key;
+    }
+
+    public override void Execute()
+    {
+        _action();
+    }
+}

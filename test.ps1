@@ -1,3 +1,3 @@
-﻿param([bool]$enable)
+﻿param([string]$name)
 
-return $enable
+Set-Content -Path "C:\Users\Matts\Projects\Experiments\CommandCenter\out.txt" -Value $name

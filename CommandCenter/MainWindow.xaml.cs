@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.Reflection;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -9,6 +11,11 @@ namespace CommandCenter;
 public partial class MainWindow
 {
     private GlobalHotkeyService? _hotkeyService;
+    private Dictionary<string, Service> _services = new()
+    {
+        {"Foundation", new Service{ Id = "Foundation" }},
+        {"Fusion", new Service{ Id = "myprotime" }}
+    };
 
     public MainWindow()
     {
@@ -27,42 +34,63 @@ public partial class MainWindow
         _hotkeyService = new GlobalHotkeyService(windowHandle, source!);
 
         // register global hotkeys
-        _hotkeyService.RegisterHotkeys([
+        List<Hotkey> hotkeys = [
             new MessageKey(),
             new ToggleVisibilityKey(ToggleVisibility),
-            new ClickThroughKey(windowHandle)
-        ]);
+            new ClickThroughKey(windowHandle),
+        ];
+
+        // service hotkeys
+        var serviceKeys = _services.Select((service, index) =>
+        {
+            var key = Key.D1 + index;
+            return new ActionHotKey(key, () => ToggleIisService(service.Value.Id));
+        });
+
+        hotkeys = hotkeys.Concat(serviceKeys).ToList();
+        
+        _hotkeyService.RegisterHotkeys(hotkeys.ToArray());
+        
+        UpdateServices();
     }
 
-    private void ToggleVisibility()
+    private void UpdateServices()
     {
-        Visibility = Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+        // Get service status and set correctly
+        var status = IisManager.GetStatus();
+        foreach (var (key, value) in _services)
+            value.Status = status[value.Id];
+        
+        foreach (var (key, value) in _services)
+        {
+            var button = (Button?) GetType().GetField(key, BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(this);
+            button!.Background = GetColor(value.Status);
+        }
+    }
+    
+    private SolidColorBrush GetColor(bool status) => status ? Brushes.Chartreuse : Brushes.Salmon;
+    private void Service_OnClick(object sender, RoutedEventArgs e) => ToggleIisService(((Button) sender).Name);
+
+    private void ToggleIisService(string id)
+    {
+        var parameters = new Dictionary<string, object> { { "name", id } };
+        PowershellExecutor.RunScriptFile("test", parameters);
+        UpdateServices();
     }
 
+    private void ToggleVisibility() => Visibility = Visibility == Visibility.Visible 
+        ? Visibility.Collapsed 
+        : Visibility.Visible;
 
     private void MainWindow_MouseDown(object sender, MouseButtonEventArgs e)
     {
         if (e.LeftButton == MouseButtonState.Pressed)
-        {
             DragMove();
-        }
     }
 
     protected override void OnClosed(EventArgs e)
     {
         _hotkeyService?.Dispose();
         base.OnClosed(e);
-    }
-
-    private void Test_OnClick(object sender, RoutedEventArgs e)
-    {
-        var result = PowershellExecutor.RunScriptFile<bool>("test", new Dictionary<string, object> { { "enable", true } });
-        Test.Background = result ? Brushes.Chartreuse : Brushes.Brown;
-    }
-
-    private void Test2_OnClick(object sender, RoutedEventArgs e)
-    {
-        var result = PowershellExecutor.RunScriptFile<bool>("test", new Dictionary<string, object> { { "enable", false } });
-        Test2.Background = result ? Brushes.Chartreuse : Brushes.Brown;
     }
 }

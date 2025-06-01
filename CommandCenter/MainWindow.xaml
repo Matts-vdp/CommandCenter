@@ -12,14 +12,15 @@
         Topmost="True"
         ShowInTaskbar="False">
     <StackPanel HorizontalAlignment="Left" Width="auto">
-    <Border Height="20" Width="auto" Background="Black" Opacity="0.3" Margin="0 5" />
-    <StackPanel Orientation="Horizontal" Width="auto" Margin="0 5">
-        <Button Width="25" x:Name="Test" Click="Test_OnClick" />
-        <Label Foreground="White">ServiceName</Label>
-    </StackPanel>
-    <StackPanel Orientation="Horizontal" Width="auto" Margin="0 5">
-        <Button Width="25" x:Name="Test2" Click="Test2_OnClick"/>
-        <Label Foreground="White">ServiceName2</Label>
-    </StackPanel>
+        <Border Height="20" Width="auto" Background="Black" Opacity="0.3" Margin="0 5" />
+
+        <StackPanel Orientation="Horizontal" Width="auto" Margin="0 5">
+            <Button Width="25" x:Name="Foundation" Click="Service_OnClick">1</Button>
+            <Label Foreground="White">Foundation</Label>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Width="auto" Margin="0 5">
+            <Button Width="25" x:Name="Fusion" Click="Service_OnClick">2</Button>
+            <Label Foreground="White">Fusion</Label>
+        </StackPanel>
     </StackPanel>
 </Window>
