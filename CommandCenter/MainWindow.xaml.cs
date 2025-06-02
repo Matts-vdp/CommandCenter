@@ -72,7 +72,7 @@ public partial class MainWindow : INotifyPropertyChanged
 
     private SolidColorBrush GetColor(bool status) => status ? Brushes.Chartreuse : Brushes.Salmon;
 
-    private async void Service_OnClick(object sender, RoutedEventArgs e) => await ToggleIisService(((Button) sender).Name);
+    private void Service_OnClick(object sender, RoutedEventArgs e) => ToggleIisService(((Button) sender).Name);
 
     private async void FetchToken_OnClick(object sender, RoutedEventArgs e)
     {
@@ -83,9 +83,9 @@ public partial class MainWindow : INotifyPropertyChanged
         FetchToken.Background = Brushes.White;
     }
 
-    private async Task ToggleIisService(string id)
+    private void ToggleIisService(string id)
     {
-        await IisManager.ToggleService(id);
+        IisManager.ToggleService(id);
         UpdateServices();
     }
 

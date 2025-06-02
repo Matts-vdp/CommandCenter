@@ -1,19 +1,30 @@
-﻿namespace CommandCenter;
+﻿using Microsoft.Web.Administration;
+
+namespace CommandCenter;
 
 public static class IisManager
 {
     public static Dictionary<string, bool> GetStatus()
     {
-        return new Dictionary<string, bool>
-        {
-            { "Foundation", true },
-            { "myprotime", false }
-        };
+        using var serverManager = new ServerManager();
+
+        var states = serverManager.Sites.ToDictionary(
+            s => s.Name, 
+            s => s.State == ObjectState.Started);
+        
+        return states;
     }
 
-    public static async Task ToggleService(string id)
+    public static void ToggleService(string id)
     {
-        var parameters = new Dictionary<string, object> { { "name", id } };
-        await PowershellExecutor.RunScriptFile("test", parameters);
+        using var serverManager = new ServerManager();
+        
+        var site = serverManager.Sites[id];
+
+        if (site.State == ObjectState.Started)
+            site.Stop();
+        else
+            site.Start();
+        
     }
 }

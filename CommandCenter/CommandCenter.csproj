@@ -10,6 +10,7 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.PowerShell.SDK" Version="7.4.10" />
+      <PackageReference Include="Microsoft.Web.Administration" Version="11.1.0" />
     </ItemGroup>
 
 </Project>
